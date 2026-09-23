@@ -1,0 +1,18 @@
+# Environment variables
+.env
+
+# Python
+__pycache__/
+*.py[cod]
+
+# Virtual environment
+.venv/
+
+# IDE
+.idea/
+
+# Generated analytical data
+data/processed/
+
+# Jupyter
+.ipynb_checkpoints/
