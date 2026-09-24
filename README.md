@@ -463,12 +463,6 @@ The dashboard expects generated files under:
 data/processed/
 ```
 
-Because `data/processed/` is excluded from Git, these files must be generated locally after cloning the repository.
-### 8. Start the platform
-
-Once `python src\prepare_data.py` completes successfully, start the two application processes from the repository root.
-
----
 
 ## ▶️ Run the Platform
 
