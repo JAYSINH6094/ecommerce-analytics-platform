@@ -11,6 +11,14 @@ def create_kpi_card(
     subtitle=None,
     sparkline=None,
 ):
+    """
+    Reusable KPI card component.
+
+    The component keeps the KPI structure intentionally small:
+    icon/title -> value -> optional delta -> optional subtitle -> optional sparkline.
+    CSS controls the visual polish and variant colors.
+    """
+
     delta_component = None
 
     if delta is not None:
@@ -23,8 +31,17 @@ def create_kpi_card(
 
         label = delta_label or "MoM"
 
-        delta_component = html.Span(
-            f"{arrow} {abs(delta):.1f}% {label}",
+        delta_component = html.Div(
+            [
+                html.Span(
+                    f"{arrow} {abs(delta):.1f}%",
+                    className="kpi-delta-value",
+                ),
+                html.Span(
+                    label,
+                    className="kpi-delta-label",
+                ),
+            ],
             className=f"kpi-delta {delta_class}",
         )
 
@@ -37,12 +54,11 @@ def create_kpi_card(
                 ),
                 html.Div(
                     title,
-                    className="kpi-label",
+                    className="kpi-title",
                 ),
             ],
             className="kpi-card-top",
         ),
-
         html.Div(
             value,
             className="kpi-value",

@@ -429,8 +429,8 @@ if (
         ),
         color="revenue",
         color_continuous_scale=[
-            "#101827",
-            "#123c52",
+            "#18283d",
+            "#174764",
             "#176b7b",
             "#22d3ee",
         ],
@@ -438,6 +438,17 @@ if (
         hover_data={
             "revenue": ":,.2f",
         },
+    )
+
+    fig_map.update_traces(
+        marker_line_width=0.8,
+        marker_line_color="rgba(111,170,205,0.28)",
+        hovertemplate=(
+            "<b>%{hovertext}</b>"
+            "<br>Revenue: R$ %{z:,.2f}"
+            "<extra></extra>"
+        ),
+        selector=dict(type="choropleth"),
     )
 
     fig_map.update_geos(
@@ -448,12 +459,20 @@ if (
 
     fig_map.update_layout(
         template="analytics_dark",
+        hoverlabel=dict(
+            bgcolor="#0b1728",
+            bordercolor="rgba(34,211,238,0.22)",
+            font=dict(
+                color="#dbe7f1",
+                size=11,
+            ),
+        ),
         paper_bgcolor="rgba(0,0,0,0)",
         plot_bgcolor="rgba(0,0,0,0)",
         margin=dict(
             l=0,
             r=0,
-            t=8,
+            t=2,
             b=0,
         ),
         coloraxis_colorbar=dict(
@@ -515,6 +534,10 @@ else:
                 orientation="h",
                 marker=dict(
                     color="#22d3ee",
+                    line=dict(
+                        color="rgba(111,170,205,0.20)",
+                        width=0.6,
+                    ),
                 ),
                 hovertemplate=(
                     "<b>%{y}</b>"
@@ -527,6 +550,14 @@ else:
 
     fig_map.update_layout(
         template="analytics_dark",
+        hoverlabel=dict(
+            bgcolor="#0b1728",
+            bordercolor="rgba(34,211,238,0.22)",
+            font=dict(
+                color="#dbe7f1",
+                size=11,
+            ),
+        ),
         paper_bgcolor="rgba(0,0,0,0)",
         plot_bgcolor="rgba(0,0,0,0)",
         height=420,
@@ -591,6 +622,10 @@ def make_state_bar(
             orientation="h",
             marker=dict(
                 color=color,
+                line=dict(
+                    color="rgba(255,255,255,0.08)",
+                    width=0.5,
+                ),
             ),
             text=df[column],
             texttemplate=(
@@ -611,6 +646,14 @@ def make_state_bar(
 
     fig.update_layout(
         template="analytics_dark",
+        hoverlabel=dict(
+            bgcolor="#0b1728",
+            bordercolor="rgba(34,211,238,0.22)",
+            font=dict(
+                color="#dbe7f1",
+                size=11,
+            ),
+        ),
         paper_bgcolor="rgba(0,0,0,0)",
         plot_bgcolor="rgba(0,0,0,0)",
         height=300,
@@ -629,6 +672,11 @@ def make_state_bar(
             "rgba(148,163,184,0.07)"
         ),
         zeroline=False,
+        tickprefix=(
+            f"{prefix} "
+            if prefix
+            else ""
+        ),
         tickfont=dict(
             color="#708198",
             size=8,
@@ -655,7 +703,7 @@ fig_top_revenue = make_state_bar(
     revenue_col,
     "Revenue",
     color="#22d3ee",
-    prefix="₹",
+    prefix="R$",
     decimals=0,
 )
 
@@ -677,7 +725,7 @@ fig_aov = make_state_bar(
     aov_col,
     "Average Order Value",
     color="#f59e0b",
-    prefix="₹",
+    prefix="R$",
     decimals=2,
 )
 
@@ -690,7 +738,7 @@ if total_revenue:
 
     top_state_description = (
         f"{top_state} contributes "
-        f"₹{top_state_revenue:,.2f}, "
+        f"R${top_state_revenue:,.2f}, "
         f"representing "
         f"{regional_revenue_share:.1f}% "
         "of regional revenue."
@@ -706,7 +754,9 @@ else:
 
 if (
     not regional.empty
+    and state_col
     and customers_col
+    and regional[customers_col].notna().any()
 ):
 
     customer_state_row = regional.loc[
@@ -735,7 +785,9 @@ else:
 
 if (
     not regional.empty
+    and state_col
     and orders_col
+    and regional[orders_col].notna().any()
 ):
 
     order_state_row = regional.loc[
@@ -796,7 +848,7 @@ layout = html.Div(
                                 "performance across "
                                 "Brazilian states."
                             ),
-                            className="page-subtitle",
+                            className="page-description",
                         ),
 
                     ],
@@ -807,7 +859,7 @@ layout = html.Div(
                     label="Key Insight",
                     title=(
                         f"{top_state} generated "
-                        f"₹{top_state_revenue / 1_000_000:.2f}M "
+                        f"R${top_state_revenue / 1_000_000:.2f}M "
                         "in revenue."
                     ),
                     description=(
@@ -832,7 +884,7 @@ layout = html.Div(
                 create_kpi_card(
                     title="Regional Revenue",
                     value=(
-                        f"₹"
+                        f"R$"
                         f"{total_revenue / 1_000_000:.2f}M"
                     ),
                     icon="↗",
@@ -858,7 +910,7 @@ layout = html.Div(
 
                 create_kpi_card(
                     title="Average Order Value",
-                    value=f"₹{overall_aov:,.2f}",
+                    value=f"R${overall_aov:,.2f}",
                     icon="◈",
                     variant="amber",
                     subtitle="Average regional basket",
@@ -952,7 +1004,7 @@ layout = html.Div(
                     title="Revenue leader",
                     description=(
                         f"{top_state} contributes "
-                        f"₹{top_state_revenue:,.0f} "
+                        f"R${top_state_revenue:,.0f} "
                         f"or {regional_revenue_share:.1f}% "
                         "of regional revenue."
                     ),

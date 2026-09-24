@@ -12,9 +12,10 @@ def create_sidebar():
             html.Div(
                 className="brand",
                 children=[
-                    html.Div(
-                        "P",
+                    html.Img(
+                        src="/assets/favicon.svg",
                         className="brand-mark",
+                        alt="PulseCommerce",
                     ),
 
                     html.Div(

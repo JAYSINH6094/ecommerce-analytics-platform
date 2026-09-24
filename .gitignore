@@ -11,8 +11,13 @@ __pycache__/
 # IDE
 .idea/
 
-# Generated analytical data
+# Raw and generated analytical data
+data/raw/
 data/processed/
 
 # Jupyter
 .ipynb_checkpoints/
+
+# OS
+.DS_Store
+Thumbs.db

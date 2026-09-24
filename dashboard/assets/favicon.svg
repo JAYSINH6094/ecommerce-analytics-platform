@@ -1,14 +1,43 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64">
     <defs>
-        <linearGradient id="g" x1="0" y1="0" x2="1" y2="1">
-            <stop offset="0" stop-color="#22d3ee"/>
-            <stop offset="1" stop-color="#8b5cf6"/>
+        <linearGradient id="pulse-gradient" x1="10" y1="54" x2="54" y2="10" gradientUnits="userSpaceOnUse">
+            <stop offset="0" stop-color="#8b5cf6"/>
+            <stop offset="0.5" stop-color="#6366f1"/>
+            <stop offset="1" stop-color="#22d3ee"/>
         </linearGradient>
     </defs>
 
-    <rect width="64" height="64" rx="16" fill="#0b1120"/>
+    <!-- Logo background -->
+    <rect
+        x="1"
+        y="1"
+        width="62"
+        height="62"
+        rx="16"
+        fill="#0b1120"
+        stroke="#22d3ee"
+        stroke-width="1.5"
+    />
+
+    <!-- Stylized P -->
     <path
-        d="M18 16h28v9H28v7h14v8H28v8h18v9H18z"
-        fill="url(#g)"
+        d="M18 49V15h18.5C45.2 15 51 20.1 51 27.5S45.2 40 36.5 40H28v9H18Z"
+        fill="url(#pulse-gradient)"
+    />
+
+    <!-- P counter -->
+    <path
+        d="M28 23v10h8c3.4 0 5-1.8 5-5s-1.6-5-5-5h-8Z"
+        fill="#0b1120"
+    />
+
+    <!-- Pulse accent -->
+    <path
+        d="M29 37h4l2.5-4.5 3.5 8 3-5.5h4"
+        fill="none"
+        stroke="#22d3ee"
+        stroke-width="2"
+        stroke-linecap="round"
+        stroke-linejoin="round"
     />
 </svg>

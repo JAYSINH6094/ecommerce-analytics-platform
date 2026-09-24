@@ -707,6 +707,15 @@ img {
     font-size: 12px;
 }
 
+.page-subtitle {
+    margin: 8px 0 0;
+
+    color: var(--text-secondary);
+
+    font-size: 12px;
+}
+
+
 
 /* ============================================================
    16. COMMON GLASS PANEL
@@ -1154,38 +1163,28 @@ tr:hover td {
 
     overflow: hidden;
 
-    border:
-        1px solid
-        rgba(107, 170, 219, 0.13);
-
+    border: 1px solid rgba(130, 190, 255, 0.16);
     border-radius: 15px;
 
     background:
-    linear-gradient(
-        135deg,
-        rgba(20, 35, 58, 0.40),
-        rgba(10, 22, 40, 0.28)
-    );
+        linear-gradient(
+            135deg,
+            rgba(20, 35, 58, 0.52),
+            rgba(10, 22, 40, 0.34)
+        );
 
     backdrop-filter: blur(18px) saturate(140%);
     -webkit-backdrop-filter: blur(18px) saturate(140%);
 
-    border: 1px solid rgba(130, 190, 255, 0.16);
-
     box-shadow:
-        0 12px 35px rgba(0, 0, 0, 0.28),
-        inset 0 1px 0 rgba(255, 255, 255, 0.07);
-
-    overflow: hidden;
-
-    box-shadow:
-        0 14px 35px rgba(0, 0, 0, 0.18),
-        inset 0 1px 0 rgba(255, 255, 255, 0.025);
+        0 14px 35px rgba(0, 0, 0, 0.20),
+        inset 0 1px 0 rgba(255, 255, 255, 0.035);
 
     transition:
         transform 180ms ease,
         border-color 180ms ease,
-        box-shadow 180ms ease;
+        box-shadow 180ms ease,
+        background 180ms ease;
 }
 
 .kpi-card:hover {
@@ -1197,6 +1196,51 @@ tr:hover td {
     box-shadow:
         0 18px 40px rgba(0, 0, 0, 0.24),
         0 0 25px rgba(34, 211, 238, 0.045);
+}
+
+.kpi-card-cyan::after {
+    background:
+        radial-gradient(
+            circle,
+            rgba(34, 211, 238, 0.10),
+            transparent 68%
+        );
+}
+
+.kpi-card-violet::after {
+    background:
+        radial-gradient(
+            circle,
+            rgba(139, 92, 246, 0.10),
+            transparent 68%
+        );
+}
+
+.kpi-card-pink::after {
+    background:
+        radial-gradient(
+            circle,
+            rgba(236, 72, 153, 0.09),
+            transparent 68%
+        );
+}
+
+.kpi-card-amber::after {
+    background:
+        radial-gradient(
+            circle,
+            rgba(245, 158, 11, 0.09),
+            transparent 68%
+        );
+}
+
+.kpi-card-green::after {
+    background:
+        radial-gradient(
+            circle,
+            rgba(52, 211, 153, 0.09),
+            transparent 68%
+        );
 }
 
 .kpi-card::after {
@@ -1348,33 +1392,27 @@ tr:hover td {
 
     overflow: hidden;
 
-    border:
-        1px solid
-        rgba(107, 170, 219, 0.13);
-
+    border: 1px solid rgba(130, 190, 255, 0.15);
     border-radius: 15px;
 
     background:
-    linear-gradient(
-        135deg,
-        rgba(18, 33, 55, 0.40),
-        rgba(8, 20, 37, 0.28)
-    );
+        linear-gradient(
+            135deg,
+            rgba(18, 33, 55, 0.50),
+            rgba(8, 20, 37, 0.34)
+        );
 
     backdrop-filter: blur(18px) saturate(135%);
     -webkit-backdrop-filter: blur(18px) saturate(135%);
 
-    border: 1px solid rgba(130, 190, 255, 0.15);
-
     box-shadow:
-        0 14px 40px rgba(0, 0, 0, 0.25),
-        inset 0 1px 0 rgba(255, 255, 255, 0.06);
+        0 14px 35px rgba(0, 0, 0, 0.19),
+        inset 0 1px 0 rgba(255, 255, 255, 0.035);
 
-    overflow: hidden;
-
-    box-shadow:
-        0 14px 35px rgba(0, 0, 0, 0.18),
-        inset 0 1px 0 rgba(255, 255, 255, 0.025);
+    transition:
+        border-color 180ms ease,
+        box-shadow 180ms ease,
+        background 180ms ease;
 }
 
 .chart-card-header {
@@ -1411,6 +1449,71 @@ tr:hover td {
     color: var(--text-muted);
 
     font-size: 8px;
+}
+
+.chart-card:hover {
+    border-color: rgba(130, 190, 255, 0.22);
+
+    background:
+        linear-gradient(
+            135deg,
+            rgba(20, 37, 61, 0.54),
+            rgba(9, 22, 39, 0.37)
+        );
+
+    box-shadow:
+        0 18px 42px rgba(0, 0, 0, 0.21),
+        0 0 24px rgba(34, 211, 238, 0.025),
+        inset 0 1px 0 rgba(255, 255, 255, 0.04);
+}
+
+.kpi-card:hover {
+    background:
+        linear-gradient(
+            135deg,
+            rgba(22, 39, 64, 0.58),
+            rgba(10, 23, 41, 0.38)
+        );
+}
+
+.kpi-sparkline {
+    position: relative;
+    z-index: 1;
+
+    height: 38px;
+    margin-top: 5px;
+    margin-left: -6px;
+    margin-right: -6px;
+
+    overflow: hidden;
+
+    opacity: 0.82;
+
+    mask-image: linear-gradient(
+        90deg,
+        transparent 0%,
+        black 8%,
+        black 92%,
+        transparent 100%
+    );
+    -webkit-mask-image: linear-gradient(
+        90deg,
+        transparent 0%,
+        black 8%,
+        black 92%,
+        transparent 100%
+    );
+}
+
+.kpi-sparkline .js-plotly-plot,
+.kpi-sparkline .plot-container,
+.kpi-sparkline .svg-container {
+    width: 100% !important;
+    height: 100% !important;
+}
+
+.kpi-sparkline .main-svg {
+    overflow: visible;
 }
 
 
@@ -1845,6 +1948,71 @@ tr:hover td {
 }
 
 
+
+/* ------------------------------------------------------------
+   Customer KPI data indicators
+   ------------------------------------------------------------ */
+
+.customer-kpi-wrapper {
+    display: flex;
+    flex-direction: column;
+    min-width: 0;
+    gap: 6px;
+}
+
+.customer-kpi-progress {
+    padding: 0 4px 1px;
+    animation: page-content-enter 420ms ease both;
+}
+
+.customer-kpi-progress-meta {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 8px;
+    margin-bottom: 4px;
+    color: var(--text-faint);
+    font-size: 9px;
+    line-height: 1;
+    letter-spacing: 0.02em;
+}
+
+.customer-kpi-progress-value {
+    color: var(--text-secondary);
+    font-variant-numeric: tabular-nums;
+}
+
+.customer-kpi-progress-track {
+    width: 100%;
+    height: 3px;
+    overflow: hidden;
+    border-radius: 999px;
+    background: rgba(107, 170, 219, 0.10);
+}
+
+.customer-kpi-progress-fill {
+    height: 100%;
+    min-width: 2px;
+    border-radius: inherit;
+    background: linear-gradient(
+        90deg,
+        rgba(236, 72, 153, 0.55),
+        rgba(236, 72, 153, 0.95)
+    );
+    box-shadow: 0 0 10px rgba(236, 72, 153, 0.22);
+    transition: width 420ms ease;
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .customer-kpi-progress {
+        animation: none;
+    }
+
+    .customer-kpi-progress-fill {
+        transition: none;
+    }
+}
+
 /* ============================================================
    CUSTOMERS PAGE
    ============================================================ */
@@ -2172,11 +2340,12 @@ tr:hover td {
 }
 
 
-
 /* ============================================================
-   REGIONAL PAGE
+   REGIONAL PAGE ONLY
+   Standalone stylesheet for the Regional dashboard page.
    ============================================================ */
 
+/* Regional layout foundation */
 .regional-page {
     width: 100%;
     max-width: none;
@@ -2235,16 +2404,13 @@ tr:hover td {
     width: 100% !important;
 }
 
-.regional-map-card .chart-card-body {
-    min-height: 390px;
-}
-
+.regional-map-card .chart-card-body,
 .regional-top-state-card .chart-card-body {
     min-height: 390px;
 }
 
+/* Regional responsive layout */
 @media (max-width: 1200px) {
-
     .regional-header {
         grid-template-columns: 1fr;
     }
@@ -2263,14 +2429,12 @@ tr:hover td {
 }
 
 @media (max-width: 850px) {
-
     .regional-secondary-grid {
         grid-template-columns: 1fr;
     }
 }
 
 @media (max-width: 650px) {
-
     .regional-header,
     .regional-main-grid,
     .regional-secondary-grid,
@@ -2279,17 +2443,516 @@ tr:hover td {
     }
 }
 
+/* ------------------------------------------------------------
+   Regional polish
+   ------------------------------------------------------------ */
 
-/* ============================================================
-   REAL-TIME PAGE
-   ============================================================ */
 
-.realtime-page {
-    width: 100%;
-    max-width: none;
-    padding-bottom: 32px;
+.regional-page {
+    position: relative;
+    isolation: isolate;
 }
 
+/* ------------------------------------------------------------
+   Page entrance
+   ------------------------------------------------------------ */
+
+.regional-page > * {
+    animation: regional-page-enter 420ms ease both;
+}
+
+.regional-page > *:nth-child(2) {
+    animation-delay: 35ms;
+}
+
+.regional-page > *:nth-child(3) {
+    animation-delay: 70ms;
+}
+
+.regional-page > *:nth-child(4) {
+    animation-delay: 105ms;
+}
+
+@keyframes regional-page-enter {
+    from {
+        opacity: 0;
+        transform: translateY(8px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+/* ------------------------------------------------------------
+   Header / key insight
+   ------------------------------------------------------------ */
+
+.regional-page .regional-header {
+    position: relative;
+    align-items: stretch;
+    gap: 18px;
+}
+
+.regional-page .regional-heading {
+    min-width: 0;
+}
+
+.regional-page .regional-header .insight-card {
+    position: relative;
+    overflow: hidden;
+    border-color: rgba(34, 211, 238, 0.16);
+    background:
+        linear-gradient(
+            135deg,
+            rgba(34, 211, 238, 0.065),
+            rgba(139, 92, 246, 0.025) 58%,
+            rgba(10, 24, 42, 0.90)
+        );
+    box-shadow:
+        0 14px 34px rgba(0, 0, 0, 0.18),
+        inset 0 1px 0 rgba(255, 255, 255, 0.025);
+    transition:
+        transform var(--transition-fast),
+        border-color var(--transition-fast),
+        box-shadow var(--transition-fast);
+}
+
+.regional-page .regional-header .insight-card::before {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: 18px;
+    right: 18px;
+    height: 1px;
+    background: linear-gradient(
+        90deg,
+        transparent,
+        rgba(34, 211, 238, 0.36),
+        transparent
+    );
+    pointer-events: none;
+}
+
+.regional-page .regional-header .insight-card:hover {
+    transform: translateY(-2px);
+    border-color: rgba(34, 211, 238, 0.25);
+    box-shadow:
+        0 18px 40px rgba(0, 0, 0, 0.22),
+        0 0 26px rgba(34, 211, 238, 0.045);
+}
+
+/* ------------------------------------------------------------
+   KPI cards
+   ------------------------------------------------------------ */
+
+.regional-page .regional-kpi-grid {
+    position: relative;
+}
+
+.regional-page .regional-kpi-grid .kpi-card {
+    position: relative;
+    overflow: hidden;
+    border-color: rgba(107, 170, 219, 0.15);
+    background:
+        linear-gradient(
+            145deg,
+            rgba(13, 29, 49, 0.94),
+            rgba(8, 21, 37, 0.90)
+        );
+    box-shadow:
+        0 12px 28px rgba(0, 0, 0, 0.15),
+        inset 0 1px 0 rgba(255, 255, 255, 0.02);
+    transition:
+        transform var(--transition-fast),
+        border-color var(--transition-fast),
+        box-shadow var(--transition-fast),
+        background var(--transition-fast);
+}
+
+.regional-page .regional-kpi-grid .kpi-card::before {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: 16px;
+    right: 16px;
+    height: 1px;
+    opacity: 0.75;
+    background: linear-gradient(
+        90deg,
+        transparent,
+        rgba(255, 255, 255, 0.10),
+        transparent
+    );
+    pointer-events: none;
+}
+
+.regional-page .regional-kpi-grid .kpi-card::after {
+    content: "";
+    position: absolute;
+    right: -26px;
+    bottom: -42px;
+    width: 110px;
+    height: 110px;
+    border-radius: 50%;
+    opacity: 0.055;
+    pointer-events: none;
+}
+
+.regional-page .regional-kpi-grid .kpi-card:nth-child(1)::after,
+.regional-page .regional-kpi-grid .kpi-card:nth-child(5)::after {
+    background: var(--cyan);
+}
+
+.regional-page .regional-kpi-grid .kpi-card:nth-child(2)::after {
+    background: var(--violet);
+}
+
+.regional-page .regional-kpi-grid .kpi-card:nth-child(3)::after {
+    background: var(--pink);
+}
+
+.regional-page .regional-kpi-grid .kpi-card:nth-child(4)::after {
+    background: var(--amber);
+}
+
+.regional-page .regional-kpi-grid .kpi-card:hover {
+    transform: translateY(-3px);
+    border-color: rgba(34, 211, 238, 0.22);
+    box-shadow:
+        0 18px 36px rgba(0, 0, 0, 0.20),
+        0 0 24px rgba(34, 211, 238, 0.035);
+}
+
+.regional-page .regional-kpi-grid .kpi-card-cyan:hover {
+    border-color: rgba(34, 211, 238, 0.30);
+    box-shadow:
+        0 18px 36px rgba(0, 0, 0, 0.20),
+        0 0 26px rgba(34, 211, 238, 0.07);
+}
+
+.regional-page .regional-kpi-grid .kpi-card-violet:hover {
+    border-color: rgba(139, 92, 246, 0.30);
+    box-shadow:
+        0 18px 36px rgba(0, 0, 0, 0.20),
+        0 0 26px rgba(139, 92, 246, 0.07);
+}
+
+.regional-page .regional-kpi-grid .kpi-card-pink:hover {
+    border-color: rgba(236, 72, 153, 0.30);
+    box-shadow:
+        0 18px 36px rgba(0, 0, 0, 0.20),
+        0 0 26px rgba(236, 72, 153, 0.07);
+}
+
+.regional-page .regional-kpi-grid .kpi-card-amber:hover {
+    border-color: rgba(245, 158, 11, 0.30);
+    box-shadow:
+        0 18px 36px rgba(0, 0, 0, 0.20),
+        0 0 26px rgba(245, 158, 11, 0.07);
+}
+
+.regional-page .regional-kpi-grid .kpi-title {
+    letter-spacing: 0.01em;
+}
+
+.regional-page .regional-kpi-grid .kpi-value {
+    position: relative;
+    z-index: 1;
+}
+
+.regional-page .regional-kpi-grid .kpi-icon {
+    transition:
+        transform var(--transition-fast),
+        box-shadow var(--transition-fast);
+}
+
+.regional-page .regional-kpi-grid .kpi-card:hover .kpi-icon {
+    transform: scale(1.045);
+}
+
+/* ------------------------------------------------------------
+   Chart cards
+   ------------------------------------------------------------ */
+
+.regional-page .chart-card {
+    position: relative;
+    overflow: hidden;
+    border-color: rgba(107, 170, 219, 0.14);
+    background:
+        linear-gradient(
+            145deg,
+            rgba(13, 29, 49, 0.93),
+            rgba(8, 21, 37, 0.89)
+        );
+    box-shadow:
+        0 12px 30px rgba(0, 0, 0, 0.14),
+        inset 0 1px 0 rgba(255, 255, 255, 0.018);
+    transition:
+        transform var(--transition-fast),
+        border-color var(--transition-fast),
+        box-shadow var(--transition-fast);
+}
+
+.regional-page .chart-card::before {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: 18px;
+    right: 18px;
+    height: 1px;
+    background: linear-gradient(
+        90deg,
+        transparent,
+        rgba(34, 211, 238, 0.20),
+        transparent
+    );
+    pointer-events: none;
+}
+
+.regional-page .chart-card:hover {
+    transform: translateY(-2px);
+    border-color: rgba(34, 211, 238, 0.20);
+    box-shadow:
+        0 18px 38px rgba(0, 0, 0, 0.18),
+        0 0 24px rgba(34, 211, 238, 0.035);
+}
+
+/* ------------------------------------------------------------
+   Map
+   ------------------------------------------------------------ */
+
+.regional-page .regional-map-card {
+    min-height: 390px;
+}
+
+.regional-page .regional-map-card .chart-card-body {
+    position: relative;
+    min-height: 0;
+}
+
+.regional-page .regional-map-card .js-plotly-plot {
+    filter: saturate(1.035) contrast(1.01);
+}
+
+.regional-page .regional-map-card .plotly,
+.regional-page .regional-map-card .svg-container {
+    max-width: 100%;
+}
+
+.regional-page .regional-map-card .modebar {
+    opacity: 0;
+    transition: opacity var(--transition-fast);
+}
+
+.regional-page .regional-map-card:hover .modebar {
+    opacity: 0.72;
+}
+
+/* ------------------------------------------------------------
+   Named Regional chart cards
+   ------------------------------------------------------------ */
+
+.regional-page .regional-top-state-card,
+.regional-page .regional-orders-card,
+.regional-page .regional-customers-card,
+.regional-page .regional-aov-card {
+    position: relative;
+}
+
+.regional-page .regional-main-grid,
+.regional-page .regional-secondary-grid {
+    position: relative;
+}
+
+/* ------------------------------------------------------------
+   Insight cards
+   ------------------------------------------------------------ */
+
+.regional-page .regional-insights-grid .insight-item {
+    transition:
+        transform var(--transition-fast),
+        border-color var(--transition-fast),
+        background var(--transition-fast),
+        box-shadow var(--transition-fast);
+}
+
+.regional-page .regional-insights-grid .insight-item:hover {
+    transform: translateY(-2px);
+    border-color: rgba(34, 211, 238, 0.17);
+    background: rgba(34, 211, 238, 0.028);
+    box-shadow: 0 10px 24px rgba(0, 0, 0, 0.13);
+}
+
+/* ------------------------------------------------------------
+   Responsive
+   ------------------------------------------------------------ */
+
+@media (max-width: 1100px) {
+    .regional-page .regional-header {
+        gap: 14px;
+    }
+
+    .regional-page .regional-main-grid,
+    .regional-page .regional-secondary-grid {
+        gap: 14px;
+    }
+}
+
+@media (max-width: 760px) {
+    .regional-page .regional-header {
+        flex-direction: column;
+        align-items: stretch;
+    }
+
+    .regional-page .regional-map-card {
+        min-height: 0;
+    }
+
+    .regional-page .regional-kpi-grid .kpi-card:hover,
+    .regional-page .chart-card:hover,
+    .regional-page .regional-header .insight-card:hover,
+    .regional-page .regional-insights-grid .insight-item:hover {
+        transform: translateY(-1px);
+    }
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .regional-page > * {
+        animation: none;
+    }
+
+    .regional-page .regional-kpi-grid .kpi-card,
+    .regional-page .chart-card,
+    .regional-page .regional-header .insight-card,
+    .regional-page .regional-insights-grid .insight-item,
+    .regional-page .regional-kpi-grid .kpi-icon {
+        transition: none;
+    }
+
+    .regional-page .regional-kpi-grid .kpi-card:hover,
+    .regional-page .chart-card:hover,
+    .regional-page .regional-header .insight-card:hover,
+    .regional-page .regional-insights-grid .insight-item:hover {
+        transform: none;
+    }
+}
+
+
+
+/* ============================================================
+   REAL-TIME ACTIVITY + FRESHNESS ENHANCEMENTS
+   SAFE PATCH: append this block to the existing style.css.
+   All selectors are scoped to .realtime-page.
+   Do NOT replace the complete style.css with this file.
+   ============================================================ */
+
+.realtime-page .rt-update-label {
+    color: #6ee7b7;
+    font-weight: 700;
+    letter-spacing: 0.01em;
+}
+
+.realtime-page .rt-activity-wrap {
+    margin: 18px 22px 22px;
+    padding-top: 16px;
+    border-top: 1px solid rgba(148, 163, 184, 0.08);
+}
+
+.realtime-page .rt-activity-label {
+    margin-bottom: 2px;
+    color: #22d3ee;
+    font-size: 9px;
+    font-weight: 800;
+    letter-spacing: 0.12em;
+}
+
+.realtime-page .rt-activity-wrap .js-plotly-plot,
+.realtime-page .rt-activity-wrap .plot-container,
+.realtime-page .rt-activity-wrap .svg-container {
+    width: 100% !important;
+}
+
+.realtime-page .rt-activity-wrap .js-plotly-plot {
+    min-height: 280px;
+}
+
+@media (max-width: 1200px) {
+    .realtime-page .rt-kpi-grid {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+
+    .realtime-page .rt-kpi-revenue {
+        grid-column: span 2;
+    }
+
+    .realtime-page .rt-main-grid {
+        grid-template-columns: minmax(0, 1fr);
+    }
+}
+
+@media (max-width: 700px) {
+    .realtime-page .rt-header {
+        align-items: flex-start;
+        flex-direction: column;
+    }
+
+    .realtime-page .rt-kpi-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .realtime-page .rt-kpi-revenue {
+        grid-column: auto;
+    }
+
+    .realtime-page .rt-panel-header {
+        align-items: flex-start;
+        flex-direction: column;
+    }
+
+    .realtime-page .rt-activity-wrap {
+        margin-left: 14px;
+        margin-right: 14px;
+    }
+}
+
+
+
+/* ============================================================
+   REAL-TIME RECENT ORDERS SCROLL AREA
+   Scoped only to the Real-Time page
+   ============================================================ */
+
+.realtime-page .rt-order-feed-container {
+    max-height: 300px;
+    overflow-y: auto;
+    overflow-x: hidden;
+    padding-right: 6px;
+}
+
+/* Keep scrollbar compact and visually subtle */
+.realtime-page .rt-order-feed-container::-webkit-scrollbar {
+    width: 5px;
+}
+
+.realtime-page .rt-order-feed-container::-webkit-scrollbar-track {
+    background: transparent;
+}
+
+.realtime-page .rt-order-feed-container::-webkit-scrollbar-thumb {
+    background: rgba(148, 163, 184, 0.28);
+    border-radius: 10px;
+}
+
+.realtime-page .rt-order-feed-container::-webkit-scrollbar-thumb:hover {
+    background: rgba(148, 163, 184, 0.45);
+}
+
+/* Firefox */
+.realtime-page .rt-order-feed-container {
+    scrollbar-width: thin;
+    scrollbar-color: rgba(148, 163, 184, 0.35) transparent;
+}
 
 /* ============================================================
    HEADER
@@ -2303,10 +2966,15 @@ tr:hover td {
     margin-bottom: 22px;
 }
 
+.rt-header > div:first-child {
+    min-width: 0;
+}
+
 .rt-live-pill {
     display: inline-flex;
     align-items: center;
     gap: 8px;
+    flex: 0 0 auto;
     padding: 9px 14px;
     border: 1px solid rgba(52, 211, 153, 0.28);
     border-radius: 999px;
@@ -2315,6 +2983,7 @@ tr:hover td {
     font-size: 10px;
     font-weight: 800;
     letter-spacing: 0.12em;
+    box-shadow: 0 0 22px rgba(52, 211, 153, 0.05);
 }
 
 .rt-live-dot {
@@ -2326,9 +2995,31 @@ tr:hover td {
     animation: rt-live-pulse 1.8s ease-in-out infinite;
 }
 
+.rt-live-dot.degraded {
+    background: #fbbf24;
+    box-shadow: 0 0 12px rgba(251, 191, 36, 0.8);
+}
+
+.rt-live-dot.offline {
+    background: #f87171;
+    box-shadow: 0 0 12px rgba(248, 113, 113, 0.7);
+    animation: none;
+}
+
+.rt-live-pill:has(.rt-live-dot.degraded) {
+    border-color: rgba(251, 191, 36, 0.28);
+    background: rgba(251, 191, 36, 0.07);
+    color: #fcd34d;
+}
+
+.rt-live-pill:has(.rt-live-dot.offline) {
+    border-color: rgba(248, 113, 113, 0.28);
+    background: rgba(248, 113, 113, 0.07);
+    color: #fca5a5;
+}
+
 @keyframes rt-live-pulse {
-    0%,
-    100% {
+    0%, 100% {
         opacity: 1;
         transform: scale(1);
     }
@@ -2338,7 +3029,6 @@ tr:hover td {
         transform: scale(0.8);
     }
 }
-
 
 /* ============================================================
    KPI GRID
@@ -2358,20 +3048,15 @@ tr:hover td {
     min-height: 172px;
     padding: 20px;
     overflow: hidden;
-
     border: 1px solid rgba(96, 165, 250, 0.14);
     border-radius: 17px;
-
     background:
         linear-gradient(
             145deg,
             rgba(11, 27, 43, 0.96),
             rgba(7, 20, 34, 0.94)
         );
-
-    box-shadow:
-        0 18px 45px rgba(0, 0, 0, 0.16);
-
+    box-shadow: 0 18px 45px rgba(0, 0, 0, 0.16);
     transition:
         transform 180ms ease,
         border-color 180ms ease,
@@ -2381,8 +3066,7 @@ tr:hover td {
 .rt-kpi:hover {
     transform: translateY(-2px);
     border-color: rgba(34, 211, 238, 0.28);
-    box-shadow:
-        0 22px 50px rgba(0, 0, 0, 0.23);
+    box-shadow: 0 22px 50px rgba(0, 0, 0, 0.23);
 }
 
 .rt-kpi::after {
@@ -2429,21 +3113,18 @@ tr:hover td {
     font-weight: 800;
     letter-spacing: -0.04em;
     line-height: 1;
+    font-variant-numeric: tabular-nums;
 }
 
 .rt-kpi-icon {
     position: absolute;
     top: 18px;
     right: 18px;
-
     display: grid;
     place-items: center;
-
     width: 34px;
     height: 34px;
-
     border-radius: 10px;
-
     color: #cbd5e1;
     background: rgba(148, 163, 184, 0.08);
     border: 1px solid rgba(148, 163, 184, 0.13);
@@ -2485,8 +3166,8 @@ tr:hover td {
 .rt-sparkline .plot-container,
 .rt-sparkline .svg-container {
     width: 100% !important;
+    height: 100% !important;
 }
-
 
 /* ============================================================
    MAIN GRID
@@ -2511,8 +3192,7 @@ tr:hover td {
             rgba(10, 25, 41, 0.96),
             rgba(6, 18, 31, 0.94)
         );
-    box-shadow:
-        0 18px 45px rgba(0, 0, 0, 0.15);
+    box-shadow: 0 18px 45px rgba(0, 0, 0, 0.15);
 }
 
 .rt-orders-panel {
@@ -2551,8 +3231,8 @@ tr:hover td {
 .rt-update-label {
     color: #60748c;
     font-size: 9px;
+    white-space: nowrap;
 }
-
 
 /* ============================================================
    ORDER FEED
@@ -2571,14 +3251,14 @@ tr:hover td {
     grid-template-columns: 12px minmax(0, 1fr) auto;
     align-items: center;
     gap: 14px;
-
     min-height: 72px;
     padding: 10px 22px;
-
     border-bottom: 1px solid rgba(148, 163, 184, 0.055);
+    transition: background 160ms ease;
+}
 
-    transition:
-        background 160ms ease;
+.rt-order-row:last-child {
+    border-bottom: 0;
 }
 
 .rt-order-row:hover {
@@ -2599,8 +3279,7 @@ tr:hover td {
     height: 7px;
     border-radius: 50%;
     background: #22d3ee;
-    box-shadow:
-        0 0 10px rgba(34, 211, 238, 0.65);
+    box-shadow: 0 0 10px rgba(34, 211, 238, 0.65);
 }
 
 .rt-order-new .rt-order-status-dot {
@@ -2608,8 +3287,7 @@ tr:hover td {
 }
 
 @keyframes rt-order-pulse {
-    0%,
-    100% {
+    0%, 100% {
         opacity: 1;
     }
 
@@ -2645,8 +3323,8 @@ tr:hover td {
     font-size: 12px;
     font-weight: 750;
     white-space: nowrap;
+    font-variant-numeric: tabular-nums;
 }
-
 
 /* ============================================================
    PIPELINE
@@ -2672,8 +3350,17 @@ tr:hover td {
 
 .rt-pipeline-dot.online {
     background: #34d399;
-    box-shadow:
-        0 0 12px rgba(52, 211, 153, 0.7);
+    box-shadow: 0 0 12px rgba(52, 211, 153, 0.7);
+}
+
+.rt-pipeline-dot.offline {
+    background: #f87171;
+    box-shadow: 0 0 12px rgba(248, 113, 113, 0.65);
+}
+
+.rt-pipeline-dot.unknown {
+    background: #fbbf24;
+    box-shadow: 0 0 12px rgba(251, 191, 36, 0.55);
 }
 
 .rt-pipeline-name {
@@ -2695,6 +3382,18 @@ tr:hover td {
     letter-spacing: 0.08em;
 }
 
+.rt-pipeline-status.online {
+    color: #6ee7b7;
+}
+
+.rt-pipeline-status.offline {
+    color: #fca5a5;
+}
+
+.rt-pipeline-status.unknown {
+    color: #fcd34d;
+}
+
 .rt-pipeline-line {
     width: 1px;
     height: 23px;
@@ -2711,10 +3410,8 @@ tr:hover td {
     display: flex;
     align-items: center;
     gap: 12px;
-
     margin-top: 32px;
     padding: 15px;
-
     border: 1px solid rgba(34, 211, 238, 0.12);
     border-radius: 12px;
     background: rgba(34, 211, 238, 0.035);
@@ -2723,12 +3420,9 @@ tr:hover td {
 .rt-flow-icon {
     display: grid;
     place-items: center;
-
     width: 31px;
     height: 31px;
-
     border-radius: 9px;
-
     color: #67e8f9;
     background: rgba(34, 211, 238, 0.09);
 }
@@ -2746,7 +3440,6 @@ tr:hover td {
     font-size: 10px;
 }
 
-
 /* ============================================================
    EMPTY STATE
    ============================================================ */
@@ -2756,7 +3449,6 @@ tr:hover td {
     flex-direction: column;
     align-items: center;
     justify-content: center;
-
     min-height: 360px;
     padding: 30px;
     text-align: center;
@@ -2765,18 +3457,13 @@ tr:hover td {
 .rt-empty-icon {
     display: grid;
     place-items: center;
-
     width: 48px;
     height: 48px;
-
     margin-bottom: 13px;
-
     border: 1px solid rgba(34, 211, 238, 0.16);
     border-radius: 14px;
-
     color: #22d3ee;
     background: rgba(34, 211, 238, 0.05);
-
     font-size: 24px;
 }
 
@@ -2794,13 +3481,11 @@ tr:hover td {
     line-height: 1.6;
 }
 
-
 /* ============================================================
    RESPONSIVE
    ============================================================ */
 
 @media (max-width: 1100px) {
-
     .rt-kpi-grid {
         grid-template-columns: repeat(2, minmax(0, 1fr));
     }
@@ -2815,10 +3500,14 @@ tr:hover td {
 }
 
 @media (max-width: 700px) {
-
     .rt-header {
         align-items: flex-start;
         flex-direction: column;
+        gap: 14px;
+    }
+
+    .rt-live-pill {
+        align-self: flex-start;
     }
 
     .rt-kpi-grid {
@@ -2836,12 +3525,340 @@ tr:hover td {
     .rt-order-value {
         grid-column: 2;
         justify-self: start;
+        margin-top: -2px;
     }
 
     .rt-panel-header {
         align-items: flex-start;
         flex-direction: column;
+        gap: 7px;
+    }
+
+    .rt-update-label {
+        white-space: normal;
+    }
+
+    .rt-pipeline-panel {
+        padding: 20px;
     }
 }
 
+@media (prefers-reduced-motion: reduce) {
+    .rt-live-dot,
+    .rt-order-new .rt-order-status-dot {
+        animation: none;
+    }
+
+    .rt-kpi {
+        transition: none;
+    }
+
+    .rt-kpi:hover {
+        transform: none;
+    }
+}
+
+/* Customers KPI micro-visuals */
+
+.customer-kpi-wrapper {
+    position: relative;
+    min-width: 0;
+    min-height: 0;
+}
+
+.customer-kpi-wrapper > .kpi-card {
+    height: 100%;
+    min-height: 178px;
+    padding-bottom: 42px;
+}
+
+.customer-kpi-effect {
+    position: absolute;
+    left: 18px;
+    right: 18px;
+    bottom: 12px;
+    z-index: 2;
+    pointer-events: none;
+}
+
+.customer-kpi-effect-meta,
+.customer-kpi-ring-copy {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 8px;
+    margin-bottom: 5px;
+}
+
+.customer-kpi-effect-label,
+.customer-kpi-effect-value {
+    color: var(--text-muted);
+    font-size: 8px;
+    line-height: 1;
+    letter-spacing: .02em;
+}
+
+.customer-kpi-effect-value {
+    color: var(--text-secondary);
+    font-variant-numeric: tabular-nums;
+}
+
+.customer-kpi-mix-track,
+.customer-kpi-progress-track,
+.customer-kpi-marker-track {
+    position: relative;
+    width: 100%;
+    height: 4px;
+    overflow: hidden;
+    border-radius: 999px;
+    background: rgba(148, 163, 184, .10);
+    box-shadow: inset 0 0 0 1px rgba(148, 163, 184, .05);
+}
+
+.customer-kpi-mix-track {
+    display: flex;
+}
+
+.customer-kpi-mix-one-time {
+    height: 100%;
+    background: rgba(139, 92, 246, .68);
+}
+
+.customer-kpi-mix-returning {
+    height: 100%;
+    min-width: 2px;
+    background: rgba(236, 72, 153, .95);
+    box-shadow: 0 0 8px rgba(236, 72, 153, .35);
+}
+
+.customer-kpi-progress-fill {
+    height: 100%;
+    min-width: 2px;
+    border-radius: inherit;
+    background: linear-gradient(
+        90deg,
+        rgba(236, 72, 153, .58),
+        rgba(236, 72, 153, .96)
+    );
+    box-shadow: 0 0 8px rgba(236, 72, 153, .30);
+    transition: width var(--transition-normal);
+}
+
+.customer-kpi-effect-ring {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.customer-kpi-ring {
+    width: 24px;
+    height: 24px;
+    flex: 0 0 24px;
+    border-radius: 50%;
+    background: rgba(148, 163, 184, .10);
+    box-shadow: 0 0 10px rgba(139, 92, 246, .18);
+}
+
+.customer-kpi-ring-visible {
+    box-shadow: 0 0 12px rgba(139, 92, 246, .24);
+}
+
+.customer-kpi-ring-copy {
+    flex: 1;
+    margin-bottom: 0;
+}
+
+.customer-kpi-marker-track {
+    height: 5px;
+    overflow: visible;
+    background:
+        linear-gradient(
+            90deg,
+            rgba(245, 158, 11, .12),
+            rgba(245, 158, 11, .34)
+        );
+}
+
+.customer-kpi-marker-line {
+    position: absolute;
+    inset: 0;
+    border-radius: inherit;
+}
+
+.customer-kpi-marker-dot {
+    position: absolute;
+    top: 50%;
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    transform: translate(-50%, -50%);
+    background: #f59e0b;
+    border: 2px solid rgba(7, 17, 31, .92);
+    box-shadow: 0 0 9px rgba(245, 158, 11, .55);
+}
+
+.customer-kpi-frequency-bars {
+    display: flex;
+    align-items: flex-end;
+    gap: 4px;
+    height: 13px;
+}
+
+.customer-kpi-frequency-bar {
+    flex: 1;
+    min-width: 4px;
+    max-width: 28px;
+    min-height: 2px;
+    border-radius: 3px 3px 1px 1px;
+    background: linear-gradient(
+        180deg,
+        rgba(34, 211, 238, .95),
+        rgba(34, 211, 238, .25)
+    );
+    box-shadow: 0 0 7px rgba(34, 211, 238, .16);
+    transition:
+        height var(--transition-normal),
+        opacity var(--transition-fast);
+}
+
+.customer-kpi-wrapper:hover .customer-kpi-frequency-bar {
+    opacity: .88;
+}
+
+.customer-kpi-wrapper:hover .customer-kpi-marker-dot {
+    box-shadow: 0 0 12px rgba(245, 158, 11, .72);
+}
+
+.customer-kpi-wrapper:hover .customer-kpi-ring {
+    box-shadow: 0 0 13px rgba(139, 92, 246, .30);
+}
+
+@media (max-width: 1100px) {
+    .customer-kpi-effect {
+        left: 16px;
+        right: 16px;
+    }
+
+    .customer-kpi-wrapper > .kpi-card {
+        padding-bottom: 40px;
+    }
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .customer-kpi-progress-fill,
+    .customer-kpi-frequency-bar {
+        transition: none;
+    }
+}
+
+
+/* Products KPI meter effects */
+
+.products-kpi-grid .kpi-card {
+    min-height: 178px;
+    padding-bottom: 40px;
+}
+
+.products-kpi-grid .kpi-sparkline {
+    display: block;
+    min-height: 18px;
+    margin-top: 10px;
+}
+
+.kpi-meter {
+    position: relative;
+    display: flex;
+    align-items: center;
+    width: 100%;
+    height: 18px;
+    padding: 0;
+    overflow: hidden;
+    border-radius: 999px;
+    background: rgba(148, 163, 184, .08);
+    border: 1px solid rgba(148, 163, 184, .07);
+}
+
+.kpi-meter-fill {
+    display: block;
+    width: 58%;
+    height: 100%;
+    border-radius: inherit;
+    opacity: .82;
+    transition:
+        width var(--transition-normal),
+        opacity var(--transition-fast);
+}
+
+.kpi-meter-label {
+    position: absolute;
+    right: 8px;
+    top: 50%;
+    transform: translateY(-50%);
+    color: var(--text-muted);
+    font-size: 8px;
+    line-height: 1;
+    letter-spacing: .02em;
+    pointer-events: none;
+}
+
+.kpi-meter-cyan .kpi-meter-fill {
+    background: linear-gradient(
+        90deg,
+        rgba(34, 211, 238, .20),
+        rgba(34, 211, 238, .90)
+    );
+    box-shadow: 0 0 9px rgba(34, 211, 238, .18);
+}
+
+.kpi-meter-violet .kpi-meter-fill {
+    background: linear-gradient(
+        90deg,
+        rgba(139, 92, 246, .20),
+        rgba(139, 92, 246, .90)
+    );
+    box-shadow: 0 0 9px rgba(139, 92, 246, .18);
+}
+
+.kpi-meter-pink .kpi-meter-fill {
+    background: linear-gradient(
+        90deg,
+        rgba(236, 72, 153, .20),
+        rgba(236, 72, 153, .90)
+    );
+    box-shadow: 0 0 9px rgba(236, 72, 153, .18);
+}
+
+.kpi-meter-amber .kpi-meter-fill {
+    background: linear-gradient(
+        90deg,
+        rgba(245, 158, 11, .20),
+        rgba(245, 158, 11, .90)
+    );
+    box-shadow: 0 0 9px rgba(245, 158, 11, .18);
+}
+
+.kpi-meter-cyan-alt .kpi-meter-fill {
+    background: linear-gradient(
+        90deg,
+        rgba(34, 211, 238, .18),
+        rgba(34, 211, 238, .86)
+    );
+    box-shadow: 0 0 9px rgba(34, 211, 238, .18);
+}
+
+.products-kpi-grid .kpi-card:hover .kpi-meter-fill {
+    opacity: 1;
+}
+
+@media (max-width: 900px) {
+    .products-kpi-grid .kpi-card {
+        min-height: 170px;
+    }
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .kpi-meter-fill {
+        transition: none;
+    }
+}
 

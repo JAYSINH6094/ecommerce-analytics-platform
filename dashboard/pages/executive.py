@@ -5,7 +5,6 @@ import pandas as pd
 import plotly.graph_objects as go
 from dash import dcc, html
 
-from dashboard import plotly_theme
 from dashboard.components.kpi_card import create_kpi_card
 from dashboard.components.chart_card import create_chart_card
 from dashboard.components.insight_card import (
@@ -155,11 +154,11 @@ else:
 # ============================================================
 
 def format_currency(value):
-    return f"₹{value:,.2f}"
+    return f"R${value:,.2f}"
 
 
 def format_millions(value):
-    return f"₹{value / 1_000_000:.2f}M"
+    return f"R${value / 1_000_000:.2f}M"
 
 
 def format_number(value):
@@ -280,7 +279,7 @@ peak_revenue = float(
 
 if "customer_id" in orders.columns:
 
-    customer_growth = (
+    customer_orders = (
         orders
         .dropna(
             subset=[
@@ -288,18 +287,37 @@ if "customer_id" in orders.columns:
                 "customer_id",
             ]
         )
-        .assign(
-            order_month=lambda df:
-            df["order_purchase_timestamp"]
-            .dt.to_period("M")
-            .dt.to_timestamp()
-        )
+        .copy()
+    )
+
+    customer_orders["order_month"] = (
+        customer_orders["order_purchase_timestamp"]
+        .dt.to_period("M")
+        .dt.to_timestamp()
+    )
+
+    # Determine the first purchase month for each customer.
+    first_purchase = (
+        customer_orders
+        .groupby("customer_id")["order_month"]
+        .min()
+        .reset_index()
+    )
+
+    # Count newly acquired customers by month.
+    customer_growth = (
+        first_purchase
         .groupby("order_month")["customer_id"]
         .nunique()
-        .reset_index(
-            name="customers"
-        )
+        .reset_index(name="new_customers")
         .sort_values("order_month")
+        .reset_index(drop=True)
+    )
+
+    # Cumulative unique customer base.
+    customer_growth["customers"] = (
+        customer_growth["new_customers"]
+        .cumsum()
     )
 
 else:
@@ -307,6 +325,7 @@ else:
     customer_growth = pd.DataFrame(
         columns=[
             "order_month",
+            "new_customers",
             "customers",
         ]
     )
@@ -427,7 +446,7 @@ fig_revenue.add_trace(
         fillcolor="rgba(34,211,238,0.06)",
         hovertemplate=(
             "<b>%{x|%b %Y}</b>"
-            "<br>Revenue: ₹%{y:,.2f}"
+            "<br>Revenue: R$%{y:,.2f}"
             "<extra></extra>"
         ),
     )
@@ -450,7 +469,7 @@ fig_revenue.add_trace(
         hovertemplate=(
             "<b>Peak Month</b>"
             "<br>%{x|%b %Y}"
-            "<br>₹%{y:,.2f}"
+            "<br>R$%{y:,.2f}"
             "<extra></extra>"
         ),
     )
@@ -595,7 +614,7 @@ fig_categories.add_trace(
             ]
         ),
         text=[
-            f"₹{value:,.0f}"
+            f"R${value:,.0f}"
             for value in top_categories["revenue"]
         ],
         textposition="outside",
@@ -605,7 +624,7 @@ fig_categories.add_trace(
         ),
         hovertemplate=(
             "<b>%{y}</b>"
-            "<br>Revenue: ₹%{x:,.2f}"
+            "<br>Revenue: R$%{x:,.2f}"
             "<extra></extra>"
         ),
     )
@@ -673,7 +692,7 @@ fig_states.add_trace(
             ]
         ),
         text=[
-            f"₹{value:,.0f}"
+            f"R${value:,.0f}"
             for value in top_states["revenue"]
         ],
         textposition="outside",
@@ -683,7 +702,7 @@ fig_states.add_trace(
         ),
         hovertemplate=(
             "<b>%{y}</b>"
-            "<br>Revenue: ₹%{x:,.2f}"
+            "<br>Revenue: R$%{x:,.2f}"
             "<extra></extra>"
         ),
     )
@@ -1011,40 +1030,35 @@ revenue_spark = create_sparkline(
     CYAN,
 )
 
-if "orders" in monthly_sales.columns:
+orders_spark = None
 
+if "orders" in monthly_sales.columns:
     orders_spark = create_sparkline(
         monthly_sales["orders"].tail(10),
         VIOLET,
     )
 
-else:
-
-    orders_spark = create_sparkline(
-        monthly_sales["revenue"].tail(10),
-        VIOLET,
-    )
-
+customer_spark = None
 
 if not customer_growth.empty:
-
     customer_spark = create_sparkline(
         customer_growth["customers"].tail(10),
         PINK,
     )
 
-else:
+aov_spark = None
 
-    customer_spark = create_sparkline(
-        monthly_sales["revenue"].tail(10),
-        PINK,
-    )
+if {"revenue", "orders"}.issubset(monthly_sales.columns):
+    monthly_aov = (
+        monthly_sales["revenue"]
+        / monthly_sales["orders"].replace(0, pd.NA)
+    ).dropna()
 
-
-aov_spark = create_sparkline(
-    monthly_sales["revenue"].tail(10),
-    AMBER,
-)
+    if not monthly_aov.empty:
+        aov_spark = create_sparkline(
+            monthly_aov.tail(10),
+            AMBER,
+        )
 
 
 # ============================================================
@@ -1114,7 +1128,7 @@ layout = html.Div(
                 create_kpi_card(
                     title="Total Revenue",
                     value=format_millions(revenue),
-                    icon="₹",
+                    icon="R$",
                     variant="cyan",
                     delta=revenue_mom,
                     delta_label="MoM",
@@ -1133,13 +1147,17 @@ layout = html.Div(
                     value=format_number(orders_count),
                     icon="◈",
                     variant="violet",
-                    subtitle="Completed order records",
-                    sparkline=dcc.Graph(
-                        figure=orders_spark,
-                        config={
-                            "displayModeBar": False,
-                            "responsive": True,
-                        },
+                    subtitle="Historical order records",
+                    sparkline=(
+                        dcc.Graph(
+                            figure=orders_spark,
+                            config={
+                                "displayModeBar": False,
+                                "responsive": True,
+                            },
+                        )
+                        if orders_spark is not None
+                        else None
                     ),
                 ),
 
@@ -1149,12 +1167,16 @@ layout = html.Div(
                     icon="●",
                     variant="pink",
                     subtitle="Unique customers",
-                    sparkline=dcc.Graph(
-                        figure=customer_spark,
-                        config={
-                            "displayModeBar": False,
-                            "responsive": True,
-                        },
+                    sparkline=(
+                        dcc.Graph(
+                            figure=customer_spark,
+                            config={
+                                "displayModeBar": False,
+                                "responsive": True,
+                            },
+                        )
+                        if customer_spark is not None
+                        else None
                     ),
                 ),
 
@@ -1164,12 +1186,16 @@ layout = html.Div(
                     icon="◆",
                     variant="amber",
                     subtitle="Revenue per order",
-                    sparkline=dcc.Graph(
-                        figure=aov_spark,
-                        config={
-                            "displayModeBar": False,
-                            "responsive": True,
-                        },
+                    sparkline=(
+                        dcc.Graph(
+                            figure=aov_spark,
+                            config={
+                                "displayModeBar": False,
+                                "responsive": True,
+                            },
+                        )
+                        if aov_spark is not None
+                        else None
                     ),
                 ),
 

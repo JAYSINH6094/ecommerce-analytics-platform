@@ -294,6 +294,135 @@ def get_state(row):
 
 
 # ============================================================
+# EVENT TIMESTAMP HELPERS
+# ============================================================
+
+def get_order_timestamp(row):
+
+    if not isinstance(row, dict):
+        return None
+
+    for key in [
+        "order_timestamp",
+        "timestamp",
+        "created_at",
+        "event_timestamp",
+    ]:
+
+        value = row.get(key)
+
+        if value:
+            try:
+                parsed = pd.to_datetime(
+                    value,
+                    errors="coerce",
+                )
+
+                if pd.notna(parsed):
+                    return parsed
+            except (TypeError, ValueError):
+                pass
+
+    return None
+
+
+def format_event_time(value):
+
+    timestamp = get_order_timestamp(value)
+
+    if timestamp is None:
+        return "Time unavailable"
+
+    return timestamp.strftime("%d %b %Y · %H:%M:%S")
+
+
+def empty_activity_chart(message="No recent activity available"):
+
+    fig = go.Figure()
+    fig.update_layout(
+        template="analytics_dark",
+        height=280,
+        margin=dict(l=12, r=18, t=12, b=34),
+        showlegend=False,
+        xaxis=dict(visible=False),
+        yaxis=dict(visible=False),
+        annotations=[dict(
+            text=message,
+            x=0.5,
+            y=0.5,
+            xref="paper",
+            yref="paper",
+            showarrow=False,
+            font=dict(color="#60748c", size=11),
+        )],
+    )
+    return fig
+
+
+def create_recent_activity_chart(rows):
+
+    if not isinstance(rows, list) or not rows:
+        return empty_activity_chart("No recent activity available")
+
+    labels = []
+    values = []
+    customdata = []
+
+    for index, row in enumerate(rows[:20], start=1):
+        if not isinstance(row, dict):
+            continue
+
+        labels.append(str(index))
+        values.append(float(get_order_amount(row)))
+        customdata.append([
+            get_order_id(row),
+            get_category(row),
+            get_state(row),
+        ])
+
+    if not labels:
+        return empty_activity_chart("No recent activity available")
+
+    fig = go.Figure()
+    fig.add_trace(
+        go.Bar(
+            x=labels,
+            y=values,
+            customdata=customdata,
+            hovertemplate=(
+                "<b>%{customdata[0]}</b><br>"
+                "Recent order: %{x}<br>"
+                "Revenue: R$ %{y:,.2f}<br>"
+                "Category: %{customdata[1]}<br>"
+                "State: %{customdata[2]}<extra></extra>"
+            ),
+        )
+    )
+
+    fig.update_layout(
+        template="analytics_dark",
+        height=280,
+        margin=dict(l=12, r=18, t=8, b=34),
+        showlegend=False,
+        xaxis=dict(
+            title="Recent order",
+            showgrid=False,
+            zeroline=False,
+            fixedrange=True,
+        ),
+        yaxis=dict(
+            title="Revenue",
+            showgrid=True,
+            zeroline=False,
+            tickprefix="R$ ",
+            fixedrange=True,
+        ),
+    )
+
+    return fig
+
+
+# ============================================================
 # SPARKLINE
 # ============================================================
 
@@ -364,7 +493,7 @@ def create_revenue_sparkline(rows):
             ),
             hovertemplate=(
                 "Revenue: "
-                "₹%{y:,.2f}"
+                "R$%{y:,.2f}"
                 "<extra></extra>"
             ),
         )
@@ -492,6 +621,13 @@ def build_order_feed(rows):
                 f"{customer_id[:8]}"
             )
 
+        timestamp = get_order_timestamp(row)
+
+        if timestamp is not None:
+            meta_parts.append(
+                timestamp.strftime("%d %b %H:%M")
+            )
+
         metadata = " · ".join(
             meta_parts
         )
@@ -540,7 +676,7 @@ def build_order_feed(rows):
                     ),
 
                     html.Div(
-                        f"₹{amount:,.2f}",
+                        f"R${amount:,.2f}",
                         className=(
                             "rt-order-value"
                         ),
@@ -672,7 +808,7 @@ layout = html.Div(
                         ),
 
                         html.Div(
-                            "₹0.00",
+                            "R$0.00",
                             id="rt-revenue",
                             className=(
                                 "rt-kpi-value"
@@ -796,7 +932,7 @@ layout = html.Div(
                         ),
 
                         html.Div(
-                            "₹",
+                            "R$",
                             className=(
                                 "rt-kpi-icon "
                                 "rt-icon-amber"
@@ -804,7 +940,7 @@ layout = html.Div(
                         ),
 
                         html.Div(
-                            "₹0.00",
+                            "R$0.00",
                             id="rt-aov",
                             className=(
                                 "rt-kpi-value"
@@ -865,7 +1001,7 @@ layout = html.Div(
                                 ),
 
                                 html.Div(
-                                    "Refreshing every 10 seconds",
+                                    "● Live · Waiting for first refresh",
                                     id="rt-last-update",
                                     className=(
                                         "rt-update-label"
@@ -883,6 +1019,24 @@ layout = html.Div(
                             className=(
                                 "rt-order-feed-container"
                             ),
+                        ),
+
+                        html.Div(
+                            [
+                                html.Div(
+                                    "RECENT ACTIVITY",
+                                    className="rt-activity-label",
+                                ),
+                                dcc.Graph(
+                                    id="rt-activity-chart",
+                                    figure=create_recent_activity_chart([]),
+                                    config={
+                                        "displayModeBar": False,
+                                        "responsive": True,
+                                    },
+                                ),
+                            ],
+                            className="rt-activity-wrap",
                         ),
 
                     ],
@@ -1184,6 +1338,11 @@ layout = html.Div(
         "children",
     ),
 
+    Output(
+        "rt-activity-chart",
+        "figure",
+    ),
+
     Input(
         "realtime-refresh",
         "n_intervals",
@@ -1376,20 +1535,23 @@ def update_realtime_dashboard(
     else:
 
         last_update = (
-            "Updated just now"
+            "● Live · Updated just now"
         )
+
+    activity_chart = create_recent_activity_chart(recent_rows)
 
 
     # --------------------------------------------------------
-    # RETURN ALL 7 OUTPUTS
+    # RETURN ALL 8 OUTPUTS
     # --------------------------------------------------------
 
     return (
-        f"₹{today_revenue:,.2f}",
+        f"R${today_revenue:,.2f}",
         f"{today_orders:,}",
         f"{today_items:,}",
-        f"₹{aov:,.2f}",
+        f"R${aov:,.2f}",
         sparkline,
         order_feed,
         last_update,
+        activity_chart,
     )

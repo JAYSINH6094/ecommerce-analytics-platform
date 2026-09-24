@@ -94,11 +94,11 @@ def format_number(value):
 
 
 def format_currency(value):
-    return f"₹{value:,.2f}"
+    return f"R${value:,.2f}"
 
 
 def format_millions(value):
-    return f"₹{value / 1_000_000:.2f}M"
+    return f"R${value / 1_000_000:.2f}M"
 
 
 def clean_category_name(value):
@@ -289,6 +289,74 @@ average_price = (
 
 
 # ============================================================
+# KPI MICRO-VISUAL REFERENCES
+# ============================================================
+
+if (
+    product_category_col
+    and total_products
+    and not product_analysis.empty
+):
+    product_category_counts = (
+        product_analysis[product_category_col]
+        .fillna("Unknown")
+        .value_counts()
+    )
+    largest_category_product_share = (
+        product_category_counts.iloc[0]
+        / total_products
+        * 100
+        if not product_category_counts.empty
+        else 0
+    )
+else:
+    largest_category_product_share = 0
+
+if category_revenue_col and total_revenue:
+    top_three_category_revenue_share = (
+        category_analysis
+        .sort_values(
+            category_revenue_col,
+            ascending=False,
+        )
+        .head(3)[category_revenue_col]
+        .sum()
+        / total_revenue
+        * 100
+    )
+else:
+    top_three_category_revenue_share = 0
+
+if category_units_col and not category_analysis.empty:
+    total_category_units = category_analysis[
+        category_units_col
+    ].sum()
+    top_category_volume_share = (
+        category_analysis[
+            category_units_col
+        ].max()
+        / total_category_units
+        * 100
+        if total_category_units
+        else 0
+    )
+else:
+    top_category_volume_share = 0
+
+if product_price_col and not product_analysis.empty:
+    average_price_percentile = (
+        product_analysis[
+            product_price_col
+        ]
+        .le(average_price)
+        .mean()
+        * 100
+    )
+else:
+    average_price_percentile = 0
+
+
+# ============================================================
 # TOP CATEGORY
 # ============================================================
 
@@ -391,7 +459,7 @@ fig_treemap.update_traces(
     textinfo="label+value",
     texttemplate=(
         "<b>%{label}</b>"
-        "<br>₹%{value:,.0f}"
+        "<br>R$%{value:,.0f}"
     ),
     textfont=dict(
         size=10,
@@ -399,7 +467,7 @@ fig_treemap.update_traces(
     ),
     hovertemplate=(
         "<b>%{label}</b>"
-        "<br>Revenue: ₹%{value:,.2f}"
+        "<br>Revenue: R$%{value:,.2f}"
         "<extra></extra>"
     ),
     marker=dict(
@@ -522,7 +590,7 @@ if not top_products.empty:
             text=top_products[
                 product_revenue_col
             ],
-            texttemplate="₹%{text:,.0f}",
+            texttemplate="R$%{text:,.0f}",
             textposition="outside",
             cliponaxis=False,
             customdata=top_products[
@@ -531,7 +599,7 @@ if not top_products.empty:
             hovertemplate=(
                 "<b>%{y}</b>"
                 "<br>Product ID: %{customdata[0]}"
-                "<br>Revenue: ₹%{x:,.2f}"
+                "<br>Revenue: R$%{x:,.2f}"
                 "<extra></extra>"
             ),
         )
@@ -739,12 +807,12 @@ if (
             text=price_data[
                 product_price_col
             ],
-            texttemplate="₹%{text:,.0f}",
+            texttemplate="R$%{text:,.0f}",
             textposition="outside",
             cliponaxis=False,
             hovertemplate=(
                 "<b>%{y}</b>"
-                "<br>Average Price: ₹%{x:,.2f}"
+                "<br>Average Price: R$%{x:,.2f}"
                 "<extra></extra>"
             ),
         )
@@ -872,7 +940,7 @@ layout = html.Div(
                                 "sales volume and pricing "
                                 "from the historical dataset."
                             ),
-                            className="page-subtitle",
+                            className="page-description",
                         ),
 
                     ],
@@ -911,52 +979,134 @@ layout = html.Div(
 
                 create_kpi_card(
                     title="Total Products",
-                    value=format_number(
-                        total_products
-                    ),
+                    value=format_number(total_products),
                     icon="◇",
                     variant="cyan",
                     subtitle="Products in analysis",
+                    sparkline=html.Div(
+                        [
+                            html.Span(
+                                className="kpi-meter-fill",
+                                style={
+                                    "width": (
+                                        f"{largest_category_product_share:.1f}%"
+                                    ),
+                                },
+                            ),
+                            html.Span(
+                                f"Largest category {largest_category_product_share:.1f}%",
+                                className="kpi-meter-label",
+                            ),
+                        ],
+                        className="kpi-meter kpi-meter-cyan",
+                    ),
                 ),
 
                 create_kpi_card(
                     title="Categories",
-                    value=format_number(
-                        total_categories
-                    ),
+                    value=format_number(total_categories),
                     icon="◈",
                     variant="violet",
                     subtitle="Product categories",
+                    sparkline=html.Div(
+                        [
+                            html.Span(
+                                className="kpi-meter-fill",
+                                style={
+                                    "width": (
+                                        f"{top_three_category_revenue_share:.1f}%"
+                                    ),
+                                },
+                            ),
+                            html.Span(
+                                f"Top 3 revenue {top_three_category_revenue_share:.1f}%",
+                                className="kpi-meter-label",
+                            ),
+                        ],
+                        className="kpi-meter kpi-meter-violet",
+                    ),
                 ),
 
                 create_kpi_card(
                     title="Units Sold",
-                    value=format_number(
-                        total_units
-                    ),
+                    value=format_number(total_units),
                     icon="▥",
                     variant="pink",
                     subtitle="Total units sold",
+                    sparkline=html.Div(
+                        [
+                            html.Span(
+                                className="kpi-meter-fill",
+                                style={
+                                    "width": (
+                                        f"{top_category_volume_share:.1f}%"
+                                    ),
+                                },
+                            ),
+                            html.Span(
+                                f"Top category {top_category_volume_share:.1f}%",
+                                className="kpi-meter-label",
+                            ),
+                        ],
+                        className="kpi-meter kpi-meter-pink",
+                    ),
                 ),
 
                 create_kpi_card(
                     title="Average Price",
-                    value=format_currency(
-                        average_price
-                    ),
-                    icon="₹",
+                    value=format_currency(average_price),
+                    icon="R$",
                     variant="amber",
                     subtitle="Average product price",
+                    sparkline=html.Div(
+                        [
+                            html.Span(
+                                className="kpi-meter-fill",
+                                style={
+                                    "width": (
+                                        f"{average_price_percentile:.1f}%"
+                                    ),
+                                },
+                            ),
+                            html.Span(
+                                f"Price percentile {average_price_percentile:.0f}"
+                                + (
+                                    "th"
+                                    if 10 <= int(average_price_percentile) % 100 <= 20
+                                    else {
+                                        1: "st",
+                                        2: "nd",
+                                        3: "rd",
+                                    }.get(int(average_price_percentile) % 10, "th")
+                                ),
+                                className="kpi-meter-label",
+                            ),
+                        ],
+                        className="kpi-meter kpi-meter-amber",
+                    ),
                 ),
 
                 create_kpi_card(
                     title="Category Revenue",
-                    value=format_millions(
-                        total_revenue
-                    ),
+                    value=format_millions(total_revenue),
                     icon="◆",
                     variant="cyan",
                     subtitle="Revenue across categories",
+                    sparkline=html.Div(
+                        [
+                            html.Span(
+                                className="kpi-meter-fill",
+                                style={
+                                    "width": f"{category_share:.1f}%",
+                                },
+                            ),
+                            html.Span(
+                                f"Top category {category_share:.1f}%",
+                                className="kpi-meter-label",
+                            ),
+                        ],
+                        className="kpi-meter kpi-meter-cyan-alt",
+                    ),
                 ),
 
             ],

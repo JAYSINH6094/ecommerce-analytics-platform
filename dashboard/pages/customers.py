@@ -70,19 +70,266 @@ def format_number(value):
 
 
 def format_currency(value):
-    return f"₹{value:,.2f}"
+    return f"R${value:,.2f}"
 
 
 def format_millions(value):
-    return f"₹{value / 1_000_000:.2f}M"
+    return f"R${value / 1_000_000:.2f}M"
 
 
 def format_percent(value):
     return f"{value:.2f}%"
 
 
+def create_customer_kpi_card(
+    title,
+    value,
+    icon,
+    variant,
+    subtitle,
+    effect_type=None,
+    effect_value=None,
+    effect_label=None,
+    effect_secondary=None,
+):
+    """
+    Customer KPI card with a compact, data-driven micro-visual.
+
+    Effects are semantic:
+    - composition: customer mix
+    - ring: returning-customer share
+    - progress: percentage KPI
+    - marker: position of average value in the monetary distribution
+    - frequency: purchase-frequency distribution
+
+    No effect represents a historical trend unless a real time series exists.
+    """
+
+    card = create_kpi_card(
+        title=title,
+        value=value,
+        icon=icon,
+        variant=variant,
+        subtitle=subtitle,
+    )
+
+    effect = None
+
+    if effect_type == "composition":
+        one_time_share = max(
+            0.0,
+            min(
+                float(effect_value or 0),
+                100.0,
+            ),
+        )
+        returning_share = max(
+            0.0,
+            min(
+                float(effect_secondary or 0),
+                100.0,
+            ),
+        )
+
+        effect = html.Div(
+            [
+                html.Div(
+                    [
+                        html.Span(
+                            effect_label or "Customer mix",
+                            className="customer-kpi-effect-label",
+                        ),
+                        html.Span(
+                            f"{returning_share:.1f}% returning",
+                            className="customer-kpi-effect-value",
+                        ),
+                    ],
+                    className="customer-kpi-effect-meta",
+                ),
+                html.Div(
+                    [
+                        html.Div(
+                            className="customer-kpi-mix-one-time",
+                            style={"width": f"{one_time_share}%"},
+                        ),
+                        html.Div(
+                            className="customer-kpi-mix-returning",
+                            style={"width": f"{returning_share}%"},
+                        ),
+                    ],
+                    className="customer-kpi-mix-track",
+                ),
+            ],
+            className="customer-kpi-effect customer-kpi-effect-composition",
+        )
+
+    elif effect_type == "ring":
+        progress = max(
+            0.0,
+            min(
+                float(effect_value or 0),
+                100.0,
+            ),
+        )
+
+        effect = html.Div(
+            [
+                html.Div(
+                    className="customer-kpi-ring",
+                    style={
+                        "background": (
+                            "radial-gradient(circle at center, "
+                            "var(--bg-main) 54%, transparent 56%), "
+                            f"conic-gradient(rgba(139, 92, 246, .95) {progress}%, "
+                            "rgba(148, 163, 184, .10) 0)"
+                        )
+                    },
+                ),
+                html.Div(
+                    [
+                        html.Span(
+                            effect_label or "Share of customers",
+                            className="customer-kpi-effect-label",
+                        ),
+                        html.Span(
+                            f"{progress:.2f}%",
+                            className="customer-kpi-effect-value",
+                        ),
+                    ],
+                    className="customer-kpi-ring-copy",
+                ),
+            ],
+            className="customer-kpi-effect customer-kpi-effect-ring",
+        )
+
+    elif effect_type == "progress":
+        progress = max(
+            0.0,
+            min(
+                float(effect_value or 0),
+                100.0,
+            ),
+        )
+
+        effect = html.Div(
+            [
+                html.Div(
+                    [
+                        html.Span(
+                            effect_label or "Returning rate",
+                            className="customer-kpi-effect-label",
+                        ),
+                        html.Span(
+                            f"{progress:.2f}%",
+                            className="customer-kpi-effect-value",
+                        ),
+                    ],
+                    className="customer-kpi-effect-meta",
+                ),
+                html.Div(
+                    html.Div(
+                        className="customer-kpi-progress-fill",
+                        style={"width": f"{progress}%"},
+                    ),
+                    className="customer-kpi-progress-track",
+                ),
+            ],
+            className="customer-kpi-effect customer-kpi-effect-progress",
+        )
+
+    elif effect_type == "marker":
+        position = max(
+            0.0,
+            min(
+                float(effect_value or 0),
+                100.0,
+            ),
+        )
+
+        effect = html.Div(
+            [
+                html.Div(
+                    [
+                        html.Span(
+                            effect_label or "Value position",
+                            className="customer-kpi-effect-label",
+                        ),
+                        html.Span(
+                            f"{position:.0f}th pct.",
+                            className="customer-kpi-effect-value",
+                        ),
+                    ],
+                    className="customer-kpi-effect-meta",
+                ),
+                html.Div(
+                    [
+                        html.Div(
+                            className="customer-kpi-marker-line",
+                        ),
+                        html.Div(
+                            className="customer-kpi-marker-dot",
+                            style={"left": f"{position}%"},
+                        ),
+                    ],
+                    className="customer-kpi-marker-track",
+                ),
+            ],
+            className="customer-kpi-effect customer-kpi-effect-marker",
+        )
+
+    elif effect_type == "frequency":
+        values = list(effect_value or [])
+        max_value = max(values) if values else 1
+
+        effect = html.Div(
+            [
+                html.Div(
+                    [
+                        html.Span(
+                            effect_label or "Purchase mix",
+                            className="customer-kpi-effect-label",
+                        ),
+                        html.Span(
+                            effect_secondary or "1+ order distribution",
+                            className="customer-kpi-effect-value",
+                        ),
+                    ],
+                    className="customer-kpi-effect-meta",
+                ),
+                html.Div(
+                    [
+                        html.Div(
+                            className="customer-kpi-frequency-bar",
+                            style={
+                                "height": (
+                                    f"{max(8, (value / max_value) * 100):.1f}%"
+                                ),
+                            },
+                        )
+                        for value in values
+                    ],
+                    className="customer-kpi-frequency-bars",
+                ),
+            ],
+            className="customer-kpi-effect customer-kpi-effect-frequency",
+        )
+
+    if effect is None:
+        return card
+
+    return html.Div(
+        [
+            card,
+            effect,
+        ],
+        className="customer-kpi-wrapper",
+    )
+
+
 # ============================================================
 # CUSTOMER KPIs
+# ============================================================
+
 # ============================================================
 
 total_customers = int(
@@ -195,6 +442,7 @@ fig_customer_type.add_trace(
         labels=customer_type_chart["display_type"],
         values=customer_type_chart["customers"],
         hole=0.70,
+        pull=[0.012, 0.0],
         sort=False,
         marker=dict(
             colors=[
@@ -290,12 +538,12 @@ fig_rfm_revenue.add_trace(
             line=dict(width=0),
         ),
         text=rfm_revenue["revenue"],
-        texttemplate="₹%{text:,.0f}",
+        texttemplate="R$%{text:,.0f}",
         textposition="outside",
         cliponaxis=False,
         hovertemplate=(
             "<b>%{y}</b>"
-            "<br>Revenue: ₹%{x:,.2f}"
+            "<br>Revenue: R$%{x:,.2f}"
             "<extra></extra>"
         ),
     )
@@ -539,6 +787,7 @@ if len(z_values) > 0:
             xgap=3,
             ygap=3,
             hoverongaps=False,
+            hoverlabel=dict(bgcolor="#0b1524", font=dict(color="#eef2ff")),
             colorbar=dict(
                 title=dict(
                     text="Retention",
@@ -724,6 +973,49 @@ largest_segment = (
 
 
 # ============================================================
+# KPI MICRO-VISUAL REFERENCES
+# ============================================================
+
+returning_share = (
+    returning_customers
+    / total_customers
+    * 100
+    if total_customers
+    else 0
+)
+
+one_time_share = (
+    one_time_customers
+    / total_customers
+    * 100
+    if total_customers
+    else 0
+)
+
+# Empirical percentile of the average RFM monetary value.
+# This describes where the average sits in the customer-value
+# distribution without pretending to be a time trend.
+if not rfm.empty and "monetary" in rfm.columns:
+    value_position = (
+        rfm["monetary"]
+        .le(average_customer_value)
+        .mean()
+        * 100
+    )
+else:
+    value_position = 0
+
+frequency_distribution = (
+    customer_behavior[
+        "purchase_frequency_group"
+    ]
+    .value_counts()
+    .sort_index()
+    .tolist()
+)
+
+
+# ============================================================
 # PAGE LAYOUT
 # ============================================================
 
@@ -754,7 +1046,7 @@ layout = html.Div(
                                 "segmentation and purchase "
                                 "behavior from the historical dataset."
                             ),
-                            className="page-subtitle",
+                            className="page-description",
                         ),
                     ],
                     className="customers-header-copy",
@@ -787,46 +1079,63 @@ layout = html.Div(
 
         html.Div(
             [
-                create_kpi_card(
+                create_customer_kpi_card(
                     title="Total Customers",
                     value=format_number(total_customers),
                     icon="●",
                     variant="cyan",
                     subtitle="Unique customer base",
+                    effect_type="composition",
+                    effect_value=one_time_share,
+                    effect_secondary=returning_share,
+                    effect_label="Customer mix",
                 ),
 
-                create_kpi_card(
+                create_customer_kpi_card(
                     title="Returning Customers",
                     value=format_number(returning_customers),
                     icon="↻",
                     variant="violet",
                     subtitle="Customers with repeat purchases",
+                    effect_type="ring",
+                    effect_value=returning_share,
+                    effect_label="Share of customers",
                 ),
 
-                create_kpi_card(
+                create_customer_kpi_card(
                     title="Repeat Customer Rate",
                     value=format_percent(repeat_rate),
                     icon="%",
                     variant="pink",
                     subtitle="Returning / total customers",
+                    effect_type="progress",
+                    effect_value=repeat_rate,
+                    effect_label="Returning rate",
                 ),
 
-                create_kpi_card(
+                create_customer_kpi_card(
                     title="Average Customer Value",
                     value=format_currency(
                         average_customer_value
                     ),
-                    icon="₹",
+                    icon="R$",
                     variant="amber",
                     subtitle="Average RFM monetary value",
+                    effect_type="marker",
+                    effect_value=value_position,
+                    effect_label="Customer value position",
                 ),
 
-                create_kpi_card(
+                create_customer_kpi_card(
                     title="Avg Orders / Customer",
                     value=f"{average_orders:.2f}",
                     icon="↗",
                     variant="cyan",
                     subtitle="Average purchase frequency",
+                    effect_type="frequency",
+                    effect_value=frequency_distribution,
+                    effect_label="Purchase mix",
+                    effect_secondary="1+ order distribution",
                 ),
             ],
             className="kpi-grid customers-kpi-grid",
@@ -875,7 +1184,7 @@ layout = html.Div(
                         ),
 
                         html.Div(
-                            "Customer value and engagement profile",
+                            "Customer value and engagement profile across RFM segments",
                             className="section-subtitle",
                         ),
                     ],
