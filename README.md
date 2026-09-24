@@ -255,7 +255,9 @@ All monetary values shown in the dashboard use **Brazilian Real (`R$`)**.
 
 ## 🗃️ Dataset
 
-Historical analysis uses the **Brazilian E-Commerce Public Dataset by Olist**.
+Historical analysis uses the **[Brazilian E-Commerce Public Dataset by Olist](https://www.kaggle.com/datasets/olistbr/brazilian-ecommerce)**.
+
+The dataset contains approximately 100,000 orders from Olist Store and includes information covering orders, products, customers, payments, reviews, sellers, and Brazilian geolocation data.
 
 The project works with nine source datasets:
 
@@ -271,7 +273,11 @@ The project works with nine source datasets:
 
 The raw dataset is intentionally excluded from Git because of its size.
 
-Place the source files locally in:
+Download the dataset from:
+
+**[Download Olist Brazilian E-Commerce Dataset](https://www.kaggle.com/datasets/olistbr/brazilian-ecommerce)**
+
+After downloading and extracting the files, place the nine CSV files locally in:
 
 ```text
 data/raw/olist/
@@ -348,18 +354,25 @@ ecommerce-analytics-platform/
 
 ## 🚀 Getting Started
 
+PulseCommerce is designed to be run from the repository root. The raw Olist dataset and generated analytical datasets are intentionally excluded from Git, so a fresh clone requires the dataset preparation steps below before the historical dashboard can load.
+
 ### Prerequisites
 
-- Python 3.x
-- MySQL
-- Git
+- **Python 3.x** — [Download Python](https://www.python.org/downloads/)
+- **MySQL** — [Download MySQL Community Server](https://dev.mysql.com/downloads/mysql/)
+- **Git** — [Download Git](https://git-scm.com/downloads)
+- **Olist Brazilian E-Commerce Public Dataset** — [Download from Kaggle](https://www.kaggle.com/datasets/olistbr/brazilian-ecommerce)
 
 ### 1. Clone the repository
 
+Open PowerShell or a terminal and clone the repository:
+
 ```bash
-git clone <your-github-repository-url>
+git clone https://github.com/JAYSINH6094/ecommerce-analytics-platform.git
 cd ecommerce-analytics-platform
 ```
+
+All commands in the remaining setup steps should be run from this repository root.
 
 ### 2. Create and activate a virtual environment
 
@@ -370,13 +383,26 @@ python -m venv .venv
 .\.venv\Scripts\Activate.ps1
 ```
 
+Verify that the virtual environment is active:
+
+```powershell
+python -c "import sys; print(sys.executable)"
+```
+
+The output should point to:
+
+```text
+ecommerce-analytics-platform\.venv\Scripts\python.exe
+```
+
 ### 3. Install dependencies
 
 ```powershell
+python -m pip install --upgrade pip
 pip install -r requirements.txt
 ```
 
-### 4. Configure the database
+### 4. Configure MySQL
 
 Create the required MySQL database and configure the connection values expected by `api/database.py` in your local `.env` file.
 
@@ -390,43 +416,72 @@ sql/
 
 ### 5. Add the Olist dataset
 
-Place the raw CSV files under:
+Download the **[Olist Brazilian E-Commerce Public Dataset](https://www.kaggle.com/datasets/olistbr/brazilian-ecommerce)** and extract the nine CSV files into:
 
 ```text
 data/raw/olist/
 ```
 
-### 6. Run the data preparation workflow
-
-Use the scripts under:
+The expected directory is:
 
 ```text
-src/data/
+data/raw/olist/
+├── olist_customers_dataset.csv
+├── olist_geolocation_dataset.csv
+├── olist_orders_dataset.csv
+├── olist_order_items_dataset.csv
+├── olist_order_payments_dataset.csv
+├── olist_order_reviews_dataset.csv
+├── olist_products_dataset.csv
+├── olist_sellers_dataset.csv
+└── product_category_name_translation.csv
 ```
 
-for inspection, cleaning, validation, profiling, and database loading.
+The raw dataset is intentionally excluded from Git because of its size.
 
-Use the workflows under:
+### 6. Prepare the data
+
+From the repository root, run the data preparation pipeline:
+
+```powershell
+python src\prepare_data.py
+
+```
+### 7. Generate analytical datasets
+
+Use the analytical workflows under:
 
 ```text
 src/analytics/
 ```
 
-to generate the analytical datasets used by the dashboard.
+to generate the analytical datasets consumed by the dashboard.
+
+The dashboard expects generated files under:
+
+```text
+data/processed/
+```
+
+Because `data/processed/` is excluded from Git, these files must be generated locally after cloning the repository.
+### 8. Start the platform
+
+Once `python src\prepare_data.py` completes successfully, start the two application processes from the repository root.
 
 ---
 
 ## ▶️ Run the Platform
 
-PulseCommerce has two application processes.
+PulseCommerce runs as two application processes: a FastAPI backend and a Plotly Dash dashboard.
 
-### FastAPI
+### FastAPI Backend
 
-Start the backend:
+From the repository root:
 
 ```powershell
 uvicorn api.main:app --reload
 ```
+The backend runs locally and provides real-time order ingestion and analytics endpoints.
 
 Health check:
 
@@ -434,9 +489,29 @@ Health check:
 GET /health
 ```
 
-### Plotly Dash
+You can also open the API documentation at:
 
-In a second terminal:
+```text
+http://127.0.0.1:8000/docs
+```
+
+### Plotly Dash Dashboard
+
+Keep the FastAPI terminal running and open a **second terminal**.
+
+Navigate to the repository root if necessary:
+
+```powershell
+cd ecommerce-analytics-platform
+```
+
+Activate the virtual environment:
+
+```powershell
+.\.venv\Scripts\Activate.ps1
+```
+
+Start the dashboard:
 
 ```powershell
 python -m dashboard.app
@@ -446,6 +521,38 @@ The dashboard uses Dash Pages and loads the five views from:
 
 ```text
 dashboard/pages/
+```
+
+The dashboard is typically available at:
+
+```text
+http://127.0.0.1:8050/
+```
+
+### Recommended Startup Order
+
+For a fresh clone:
+
+```text
+Clone repository
+      ↓
+Create virtual environment
+      ↓
+Install dependencies
+      ↓
+Configure MySQL
+      ↓
+Download Olist dataset
+      ↓
+Place CSVs in data/raw/olist/
+      ↓
+Run data preparation workflows
+      ↓
+Generate analytical datasets
+      ↓
+Start FastAPI
+      ↓
+Start Plotly Dash
 ```
 
 ---
